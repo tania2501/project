@@ -8,4 +8,12 @@ import { Component } from "@angular/core";
 
 export class TestComponent {
   title = 'Test Title'
+  text = ''
+
+  changeTitle() {
+    this.title = 'New Title'
+  }
+  changeText(event: Event) {
+    this.text = (event.currentTarget as HTMLInputElement).value
+  }
 }
