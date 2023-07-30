@@ -1,4 +1,4 @@
-<h1 class="test">{{title}}</h1>
-<button (click)="changeTitle()">Change</button>
-<div>{{text}}</div>
-<input type="text" (keyup.enter)="changeText($event)"/>
+<div>
+  <app-child (sendGradeEvent)="getGrade($event)"></app-child>
+  <div>{{ grades | json }}</div>
+</div>

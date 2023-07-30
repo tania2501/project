@@ -1,4 +1,5 @@
 import { Component } from "@angular/core";
+import { Grade } from "./child/child.component";
 
 @Component({
   selector: 'app-test1',
@@ -7,13 +8,9 @@ import { Component } from "@angular/core";
 })
 
 export class TestComponent {
-  title = 'Test Title'
-  text = ''
+  grades: string[] = ['math: 5', 'literary: 3'];
 
-  changeTitle() {
-    this.title = 'New Title'
-  }
-  changeText(event: Event) {
-    this.text = (event.currentTarget as HTMLInputElement).value
+  getGrade(grade: string) {
+    this.grades.push(grade)
   }
 }
