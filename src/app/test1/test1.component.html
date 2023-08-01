@@ -1,4 +1,6 @@
-<div>
-  <app-child (sendGradeEvent)="getGrade($event)"></app-child>
-  <div>{{ grades | json }}</div>
+<div *ngFor="let fruit of fruits; even as even; odd as odd">
+  <div style="display: flex;" *ngIf="fruit.price > 7">
+    <p [ngClass]="{'success': even, 'error': odd, 'default': fruit.price > 15}">{{fruit.name}} : </p>
+    <p> {{fruit.price}}</p>
+  </div>
 </div>
