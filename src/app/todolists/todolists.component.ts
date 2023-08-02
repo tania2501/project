@@ -1,30 +1,59 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http'
+import { TodosService } from '../services/todos.service';
 
-interface Todo {
+export interface Todo {
   addedDate: string
   id: string
   order: number
   title: string
 }
+export interface Item {
+  id: string
+  title: string,
+  addedDate: string,
+  order: number
+}
+
+export interface ResponseTodo<T = {}> {
+    resultCode: number
+    messages: [],
+    data: T
+}
+
 @Component({
   selector: 'app-todolists',
   templateUrl: './todolists.component.html',
   styleUrls: ['./todolists.component.css']
 })
 export class TodolistsComponent implements OnInit {
+  value = ''
   todo: Todo[] = []
-  constructor(private http: HttpClient) { }
+  constructor(private todosService: TodosService) {}
+
   ngOnInit(): void {
     this.getTodos()
   }
+  changeTitle(title: Event) {
+    this.value = (title.currentTarget as HTMLInputElement).value
+  }
+
   getTodos() {
-    this.http.get<Todo[]>('https://social-network.samuraijs.com/api/1.1/todo-lists', {
-      withCredentials: true, headers: {
-        'api-key': '9ea0b65b-29dc-4d3d-81d5-a42faf1e493e'
-      }
-    }).subscribe (res => {
-      this.todo = res;
+    this.todosService.getToodos().subscribe((res: Todo[]) => {
+      this.todo = res
+    })
+  }
+
+  createTodo() {
+    const title = this.value
+    this.todosService.createTodo(title).subscribe((res) => {
+      const newTodo = res.data.item
+      this.todo.unshift(newTodo)
+    })
+    this.value = ''
+  }
+  deleteTodo(id: string) {
+    this.todosService.deleteTodo(id).subscribe(() => {
+      this.todo = this.todo.filter(todo => todo.id != id)
     })
   }
 }

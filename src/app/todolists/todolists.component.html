@@ -1,3 +1,11 @@
-<div *ngFor="let todo of todo">
-  {{todo.title}}
+<h1>My todolists</h1>
+<div>
+  <input type="text" [(ngModel)]="value" (click)="changeTitle($event)">
+  <button (click)="createTodo()">+</button>
+</div>
+
+
+<div *ngFor="let todo of todo" style="display: flex;">
+  <h3 style="margin: 5px;">{{todo.title}}</h3>
+  <button (click)="deleteTodo(todo.id)">x</button>
 </div>
