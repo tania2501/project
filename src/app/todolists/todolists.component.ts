@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { TodosService } from '../services/todos.service';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Observable, Subscription } from 'rxjs';
 
 export interface Todo {
   addedDate: string
@@ -15,9 +17,9 @@ export interface Item {
 }
 
 export interface ResponseTodo<T = {}> {
-    resultCode: number
-    messages: [],
-    data: T
+  resultCode: number
+  messages: [],
+  data: T
 }
 
 @Component({
@@ -27,10 +29,13 @@ export interface ResponseTodo<T = {}> {
 })
 export class TodolistsComponent implements OnInit {
   value = ''
-  todo: Todo[] = []
-  constructor(private todosService: TodosService) {}
+  todos$!: Observable<Todo[]>
+
+  constructor(private todosService: TodosService) { }
+
 
   ngOnInit(): void {
+    this.todos$ = this.todosService.todos$
     this.getTodos()
   }
   changeTitle(title: Event) {
@@ -38,22 +43,15 @@ export class TodolistsComponent implements OnInit {
   }
 
   getTodos() {
-    this.todosService.getToodos().subscribe((res: Todo[]) => {
-      this.todo = res
-    })
+    this.todosService.getToodos()
   }
 
   createTodo() {
     const title = this.value
-    this.todosService.createTodo(title).subscribe((res) => {
-      const newTodo = res.data.item
-      this.todo.unshift(newTodo)
-    })
+    this.todosService.createTodo(title)
     this.value = ''
   }
   deleteTodo(id: string) {
-    this.todosService.deleteTodo(id).subscribe(() => {
-      this.todo = this.todo.filter(todo => todo.id != id)
-    })
+    this.todosService.deleteTodo(id)
   }
 }
